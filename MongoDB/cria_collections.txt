@@ -1,0 +1,47 @@
+db.createCollection("produtos_detalhes", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["produto_id", "marca", "especificacoes"],
+      properties: {
+        produto_id: { bsonType: "int" },
+        marca: { bsonType: "string" },
+        modelo: { bsonType: "string" },
+        preco: { bsonType: "double" },
+        categoria_id: { bsonType: "int" },
+        especificacoes: { bsonType: "object" },
+        avaliacoes: { bsonType: "array" }
+      }
+    }
+  }
+})
+
+
+
+__________________________________________________________________
+db.createCollection("usuarios_perfis", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["cliente_id", "preferencias"],
+      properties: {
+        cliente_id: { bsonType: "int" },
+        preferencias: {
+          bsonType: "object",
+          required: ["categorias_favoritas", "marcas_favoritas", "alertas_promocao"],
+          properties: {
+            categorias_favoritas: {
+              bsonType: "array",
+              items: { bsonType: "string" }
+            },
+            marcas_favoritas: {
+              bsonType: "array",
+              items: { bsonType: "string" }
+            },
+            alertas_promocao: { bsonType: "bool" }
+          }
+        }
+      }
+    }
+  }
+})

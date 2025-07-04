@@ -1,0 +1,13 @@
+CREATE TABLE eventos
+(
+    user_id        UInt64,
+    evento         String,      
+    produto_id     UInt64,
+    data_evento    DateTime,
+    termo_busca    String,
+    campanha_id    UInt64,
+    clicou         UInt8,    
+    utm_source     String
+)
+ENGINE = MergeTree
+ORDER BY (user_id, data_evento);

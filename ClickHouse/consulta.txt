@@ -1,0 +1,88 @@
+--Consulta de funil de conversão (visualizou ? adicionou ? comprou)
+
+SELECT
+    COUNT(DISTINCT IF(evento = 'visualizacao', user_id, NULL)) AS visualizou,
+    COUNT(DISTINCT IF(evento = 'add_carrinho', user_id, NULL)) AS adicionou,
+    COUNT(DISTINCT IF(evento = 'compra', user_id, NULL)) AS comprou
+FROM eventos
+WHERE data_evento >= today() - 7;
+
+__________________________________________________________________
+--Número de eventos de "visualização" por dia na última semana
+
+SELECT
+    toDate(data_evento) AS dia,
+    COUNT(*) AS visualizacoes
+FROM eventos
+WHERE evento = 'visualizacao'
+  AND data_evento >= today() - 7
+GROUP BY dia
+ORDER BY dia;
+
+
+__________________________________________________________________
+
+--Número de eventos de "visualização" por dia na última semana
+
+SELECT
+    toDate(data_evento) AS dia,
+    COUNT(*) AS visualizacoes
+FROM eventos
+WHERE evento = 'visualizacao'
+  AND data_evento >= today() - 7
+GROUP BY dia
+ORDER BY dia;
+
+
+__________________________________________________________________
+
+Top 10 termos de busca mais usados
+
+SELECT
+    termo_busca,
+    COUNT(*) AS total_buscas
+FROM eventos
+WHERE NOT empty(termo_busca)
+GROUP BY termo_busca
+ORDER BY total_buscas DESC
+LIMIT 10;
+
+
+
+__________________________________________________________________
+
+SELECT
+    campanha_id,
+    COUNTIf(clicou = 1) AS cliques,
+    COUNTIf(evento = 'visualizacao') AS impressoes,
+    round(cliques / impressoes, 4) AS ctr
+FROM eventos
+WHERE campanha_id IS NOT NULL
+GROUP BY campanha_id
+ORDER BY ctr DESC;
+
+
+__________________________________________________________________
+
+Calcular CTR (Click-Through Rate) de uma campanha
+CTR = total de cliques / total de impressões
+
+SELECT
+    campanha_id,
+    COUNTIf(clicou = 1) AS cliques,
+    COUNTIf(evento = 'visualizacao') AS impressoes,
+    round(cliques / impressoes, 4) AS ctr
+FROM eventos
+WHERE campanha_id IS NOT NULL
+GROUP BY campanha_id
+ORDER BY ctr DESC;
+
+
+__________________________________________________________________
+
+Listar usuários que vieram de uma utm_source específica e realizaram compra
+
+SELECT DISTINCT user_id
+FROM eventos
+WHERE utm_source = 'facebook'
+  AND evento = 'compra';

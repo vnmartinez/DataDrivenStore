@@ -1,0 +1,77 @@
+Filtragem Colaborativa (Item-Item)
+"Dado um produto X, encontre outros produtos frequentemente comprados juntos."
+
+MATCH (p1:Produto {id: 'X'})<-[:COMPROU]-(u:Usuario)-[:COMPROU]->(p2:Produto)
+WHERE p1 <> p2
+RETURN p2.nome AS produto_relacionado, COUNT(*) AS vezes_comprado_juntos
+ORDER BY vezes_comprado_juntos DESC
+LIMIT 5;
+
+
+
+
+_______________________________________________________________________
+Filtragem Colaborativa (User-User)
+"Encontre clientes com histórico de compra similar ao do cliente Y e recomende produtos que eles compraram, mas Y não."
+
+MATCH (y:Usuario {id: 'Y'})-[:COMPROU]->(p:Produto)
+WITH y, COLLECT(p) AS produtos_y
+
+MATCH (outro:Usuario)-[:COMPROU]->(p2:Produto)
+WHERE outro <> y AND p2 IN produtos_y
+WITH y, outro, COUNT(*) AS interesse_comum
+ORDER BY interesse_comum DESC
+LIMIT 5
+
+MATCH (outro)-[:COMPROU]->(recomendado:Produto)
+WHERE NOT (y)-[:COMPROU]->(recomendado)
+RETURN recomendado.nome, COUNT(*) AS score
+ORDER BY score DESC
+LIMIT 5;
+
+
+
+_______________________________________________________________________
+Caminho mais curto entre dois produtos via categorias
+"Encontrar o caminho mais curto entre dois produtos através de suas categorias."
+
+cypher
+Copiar
+Editar
+MATCH (p1:Produto {id: 'P1'}), (p2:Produto {id: 'P2'}),
+path = shortestPath((p1)-[:PERTENCE*1..3]-(p2))
+RETURN path;
+
+
+_______________________________________________________________________
+Clientes influenciadores (avaliações ? mais vendas)
+"Identificar clientes cujas avaliações positivas se correlacionam com mais vendas."
+
+cypher
+Copiar
+Editar
+MATCH (u:Usuario)-[r:AVALIOU]->(p:Produto)
+WHERE r.nota >= 4
+
+MATCH (p)<-[:COMPROU]-(outro:Usuario)
+WHERE outro <> u
+
+RETURN u.nome AS influenciador, COUNT(DISTINCT outro) AS compras_apos_avaliacao
+ORDER BY compras_apos_avaliacao DESC
+LIMIT 5;
+
+
+_______________________________________________________________________
+Recomendar produtos de categorias visualizadas, mas não compradas
+"Recomendar produtos de categorias que um cliente visualizou, mas ainda não comprou."
+
+cypher
+Copiar
+Editar
+MATCH (u:Usuario {id: 'Y'})-[:VISUALIZOU]->(p:Produto)-[:PERTENCE]->(c:Categoria)
+WHERE NOT (u)-[:COMPROU]->(:Produto)-[:PERTENCE]->(c)
+WITH DISTINCT c
+
+MATCH (c)<-[:PERTENCE]-(recomendado:Produto)
+RETURN recomendado.nome, c.nome AS categoria
+LIMIT 10;

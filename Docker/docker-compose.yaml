@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8123:8123"   
+      - "9000:9000"   
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    environment:
+      NEO4J_AUTH: neo4j/test1234
+    ports:
+      - "7474:7474"  
+      - "7687:7687" 
+    volumes:
+      - neo4j_data:/data
+
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+  clickhouse_data:
+  neo4j_data:

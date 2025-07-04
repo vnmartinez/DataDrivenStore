@@ -1,0 +1,66 @@
+db.produtos_detalhes.insertMany([
+  {
+    produto_id: 1,
+    marca: "Dell",
+    modelo: "Inspiron 15",
+    preco: 4200.00,
+    categoria_id: 3,
+    especificacoes: {
+      processador: "i7",
+      ram: "16GB",
+      armazenamento: "512GB SSD",
+      gpu: "NVIDIA GTX 1650"
+    },
+    avaliacoes: [
+      {
+        usuario: "João",
+        comentario: "Ótimo desempenho!",
+        nota: 5,
+        data: ISODate("2024-10-01T10:00:00Z")
+      },
+      {
+        usuario: "Maria",
+        comentario: "Poderia ter melhor bateria.",
+        nota: 3,
+        data: ISODate("2024-10-05T14:00:00Z")
+      }
+    ]
+  },
+  {
+    produto_id: 2,
+    marca: "Lenovo",
+    modelo: "ThinkPad X1",
+    preco: 5800.00,
+    categoria_id: 3,
+    especificacoes: {
+      processador: "i5",
+      ram: "8GB",
+      armazenamento: "256GB SSD",
+      gpu: "Integrada"
+    },
+    avaliacoes: []
+  }
+])
+
+
+
+
+__________________________________________________________________________
+db.usuarios_perfis.insertMany([
+  {
+    cliente_id: 1,
+    preferencias: {
+      categorias_favoritas: ["Notebooks", "Periféricos"],
+      marcas_favoritas: ["Dell", "Logitech"],
+      alertas_promocao: true
+    }
+  },
+  {
+    cliente_id: 2,
+    preferencias: {
+      categorias_favoritas: ["Monitores"],
+      marcas_favoritas: ["Samsung"],
+      alertas_promocao: false
+    }
+  }
+])

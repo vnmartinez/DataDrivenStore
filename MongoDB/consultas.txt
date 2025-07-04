@@ -1,0 +1,46 @@
+db.produtos_detalhes.aggregate([
+  {
+    $group: {
+      _id: "$marca",
+      media_preco: { $avg: "$preco" }
+    }
+  }
+])
+
+__________________________________________________________________________
+db.produtos_detalhes.find({
+  "especificacoes.processador": "i7",
+  "preco": { $gte: 3000, $lte: 7000 }
+})
+
+
+__________________________________________________________________________
+
+db.produtos_detalhes.updateMany(
+  { "categoria_id": 2 },
+  { $set: { "garantia": "12 meses" } }
+)
+
+
+
+__________________________________________________________________________
+db.produtos_detalhes.aggregate([
+  { $match: { produto_id: 1 } },
+  { $unwind: "$avaliacoes" },
+  { $sort: { "avaliacoes.data": -1 } },
+  {
+    $project: {
+      _id: 0,
+      usuario: "$avaliacoes.usuario",
+      nota: "$avaliacoes.nota",
+      comentario: "$avaliacoes.comentario",
+      data: "$avaliacoes.data"
+    }
+  }
+])
+
+
+__________________________________________________________________________
+db.usuarios_perfis.find({
+  "preferencias.marcas_favoritas": "Dell"
+})
