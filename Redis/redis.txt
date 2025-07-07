@@ -1,0 +1,19 @@
+// Estrutura de Sessão (String)
+SET session:user1234 '{
+  "userId": "1234",
+  "lastAccess": "2023-11-20T14:30:00Z",
+  "ip": "192.168.1.100"
+}' EX 3600 // Expira em 1 hora
+
+// Carrinho de Compras (Hash)
+HSET cart:user1234 
+  "product:5678" 2 // 2 unidades do produto 5678
+  "product:9012" 1
+EXPIRE cart:user1234 86400 // Expira em 24 horas
+
+// Cache de Produtos (String serializada)
+SET product:5678:cache '{
+  "name": "Smartphone Premium",
+  "price": 2999.90,
+  "stock": 15
+}' EX 300 // Atualiza a cada 5 minutos
